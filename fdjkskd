@@ -1,0 +1,471 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Главная страница"),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      bottomNavigationBar: const CustomBottomBar(),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProfileSection(
+              username: "Елизавета Евгеньевна",
+              status:
+                  "Специализируюсь на разработке надежных и масштабируемых программных решений.",
+            ),
+            SizedBox(height: 15),
+
+            ProfileControlPanel(),
+            SizedBox(height: 25),
+
+            ProfileInfoPanel(),
+            SizedBox(height: 25),
+
+            CustomImageSlider(
+              images: [
+                "https://as2.ftcdn.net/v2/jpg/17/09/72/09/1000_F_1709720962_Jw6cpTLneV2vNndRfd8xXRAUsj0MmxzN.jpg",
+                "https://as2.ftcdn.net/v2/jpg/16/53/87/43/1000_F_1653874355_11PtzqUU0EvmRu6GGHhsLjeXuqbdFBVL.jpg",
+                "https://as2.ftcdn.net/v2/jpg/17/06/13/63/1000_F_1706136314_Bm1P8IpnPnd39vvtZfLXSKoIyF2WLp9L.jpg",
+                "https://as2.ftcdn.net/v2/jpg/16/97/88/07/1000_F_1697880742_3SSkWRW6OnwujM5jw4ymFbwvo0mMkQOF.jpg",
+                "https://as2.ftcdn.net/v2/jpg/16/74/00/49/1000_F_1674004935_56L2usiIdszzANays6D2hbAUTzuKNfVc.jpg",
+                "https://as2.ftcdn.net/v2/jpg/17/13/20/67/1000_F_1713206789_IbiQvrXTjAmZjQDs6ycU7JEd9KrzYK7x.jpg",
+              ],
+              ),
+              SizedBox(height: 25),
+              
+              FeedList(
+                   items: [
+     FeedItem(
+       username: "Пользователь 1",
+       dateTime: "1 минуту назад",
+       content: "Это первое сообщение в ленте новостей.",
+     ),
+     FeedItem(
+       username: "Пользователь 2",
+       dateTime: "5 минут назад",
+       content: "Это второе сообщение в ленте новостей.",
+     ),
+   ],
+   
+
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FeedList extends StatelessWidget {
+  final List<FeedItem> items;
+
+  const FeedList({required this.items, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Header(text: "Новости"),
+        ...items,
+      ],
+    );
+  }
+}
+
+class FeedItem extends StatelessWidget {
+  final String username;
+  final String dateTime;
+  final String content;
+  
+
+  const FeedItem({
+    super.key,
+    required this.username,
+    required this.dateTime,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            CustomAvatar(radius: 25),
+            SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(username),
+                Text(
+                  dateTime,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 18),
+        Text(content),
+        SizedBox(height: 15),
+      ],
+    );
+  }
+}
+
+class CustomImageSlider extends StatelessWidget {
+  final List<String> images;
+
+  const CustomImageSlider({super.key, required this.images});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Header(text: "Фотографии"),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                SizedBox(width: 20),
+                ...images.map(
+                  (e) => Padding(
+                    padding: EdgeInsetsGeometry.all(3),
+                    child: Image.network(
+                      e,
+                      fit: BoxFit.cover,
+                      width: 140,
+                      height: 140,
+
+                    ),
+                    ),
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+
+          ),
+      ],
+    );
+  }
+}
+
+class ProfileInfoPanel extends StatelessWidget {
+  const ProfileInfoPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: CustomCard(
+                text: "Друзья",
+                count: 204,
+                icon: Icons.people,
+                iconColor: Colors.blue,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: CustomCard(
+                text: "Музыка",
+                count: 1_320,
+                icon: Icons.music_note,
+                iconColor: Colors.red,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: CustomCard(
+                text: "Видео",
+                count: 9,
+                icon: Icons.video_collection,
+                iconColor: Colors.purple,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: CustomCard(
+                text: "Чат",
+                count: 45,
+                icon: Icons.chat,
+                iconColor: Colors.green,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CustomCard extends StatelessWidget {
+  final String text;
+  final int count;
+  final IconData icon;
+  final Color iconColor;
+
+  const CustomCard({
+    required this.text,
+    required this.count,
+    required this.icon,
+    required this.iconColor,
+
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).colorScheme.secondaryContainer,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, color: iconColor),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              "$text ($count)",
+              softWrap: false,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  final String text;
+  const Header({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(text, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+        SizedBox(height: 15),
+      ],
+    );
+  }
+}
+
+class ProfileControlPanel extends StatelessWidget {
+  const ProfileControlPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: CustomButton(text: "Редактировать", onPressed: () {}),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: CustomButton(
+            text: "Выход",
+            background: Theme.of(context).colorScheme.secondaryContainer,
+            foreground: Theme.of(context).colorScheme.onSecondaryContainer,
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final Color? background;
+  final Color? foreground;
+
+  const CustomButton({
+    required this.text,
+    required this.onPressed,
+    this.background,
+    this.foreground,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: background ?? Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: foreground ?? Theme.of(context).colorScheme.onPrimary,
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileSection extends StatelessWidget {
+  final String username;
+  final String status;
+
+  const ProfileSection({
+    required this.username,
+    required this.status,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CustomAvatar(radius: 60, showIcon: true),
+        SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                username,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              Text(status, style: TextStyle(fontSize: 14, color: Colors.grey)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomBottomBar extends StatelessWidget {
+  const CustomBottomBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.shadow.withAlpha(20),
+              offset: const Offset(0, -4),
+              blurRadius: 8,
+              spreadRadius: -4,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [Icons.search, Icons.home, Icons.settings, Icons.logout]
+              .map(
+                (e) => IconButton(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  onPressed: () {},
+                  icon: Icon(e, color: Theme.of(context).colorScheme.primary),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomAvatar extends StatelessWidget {
+  final double radius;
+  final bool showIcon;
+  const CustomAvatar({required this.radius, this.showIcon = false, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: radius * 2,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: BoxBorder.all(width: 2.5, color: Colors.white),
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(
+                  "data:image/jpeg;base64,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",
+                ),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          if (showIcon)
+            Positioned(
+              right: 8,
+              bottom: 8,
+              child: Container(
+                width: 25,
+                height: 25,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                  border: BoxBorder.all(color: Colors.white),
+                ),
+                child: Icon(Icons.edit, size: 16, color: Colors.white),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
